@@ -241,6 +241,8 @@ func (c *Client) Download(files []FileToDownload, o DownloadOptions) ([]*apb.Art
 
 type UploadOptions struct {
 	*ccontext.Context
+
+	UseParallelUploads bool
 }
 
 type FileToUpload struct {
@@ -260,7 +262,6 @@ func (c *Client) Upload(files []FileToUpload, o UploadOptions) ([]*apb.Artifact,
 	artifacts := []*apb.Artifact{}
 	for _, file := range files {
 		o.Logger.Infof("uploading '%s' as '%s'", file.Local, file.Remote)
-
 		shortpath := o.ShortPath(file.Local)
 
 		p := o.Progress()
@@ -271,6 +272,10 @@ func (c *Client) Upload(files []FileToUpload, o UploadOptions) ([]*apb.Artifact,
 			return artifacts, err
 		}
 		defer fd.Close()
+
+		if o.UseParallelUploads {
+			o.Logger.Debugf("Using parallel upload feature")
+		}
 
 		p.Step("%s: allocating id", shortpath)
 		response, err := c.client.Store(context.TODO(), &apb.StoreRequest{})

@@ -10,10 +10,11 @@ type Upload struct {
 	*cobra.Command
 	root *Root
 
-	Suggest SuggestFlags
-	Arch    string
-	Note    string
-	Tag     []string
+	Suggest               SuggestFlags
+	Arch                  string
+	Note                  string
+	Tag                   []string
+	ExpUseParallelUploads bool
 }
 
 func NewUpload(root *Root) *Upload {
@@ -107,6 +108,7 @@ c) If no architecture is guessed or specified, it is assumed that the
 	command.Flags().StringVarP(&command.Arch, "arch", "a", "", "Architecture of the file, avoid automated detection")
 	command.Flags().StringVarP(&command.Note, "note", "n", "", "Note to add to the upload")
 	command.Flags().StringArrayVarP(&command.Tag, "tag", "t", nil, "Tags to assign to the binary being uploaded")
+	command.Flags().BoolVar(&command.ExpUseParallelUploads, "exp_use_parallel_uploads", false, "Enable the expiremental parallel uploads feature. Enabling this feature should imporve upload speeds, especially for larger files.")
 
 	return command
 }
@@ -123,6 +125,7 @@ func (uc *Upload) Run(cmd *cobra.Command, args []string) error {
 
 	options := astore.UploadOptions{
 		Context: uc.root.BaseFlags.Context(),
+		UseParallelUploads: uc.ExpUseParallelUploads,
 	}
 
 	files := []astore.FileToUpload{}

@@ -26,6 +26,14 @@ message CommitRequest {
   string note = 5;         // User readable message assigned to the upload.
 }
 
+message StoreCompositeRequest{
+}
+
+message StoreCompositeResponse{
+  string sid = 1;
+  repeated string urls = 2;	
+}
+
 // Metadata associated with an artifact.
 message Artifact {
   string sid = 1;
@@ -51,6 +59,21 @@ message Element {
 
 message CommitResponse {
   Artifact artifact = 1;
+}
+
+message CommitCompositeRequest {
+  string sid = 1;
+  string path = 2;
+  string architecture = 3;
+  
+  repeated string tag = 4;
+  string note = 5;
+
+  int32 parts = 6;
+}
+
+message CommitCompositeResponse {
+	Artifact artifact = 1;
 }
 
 message RetrieveRequest {
@@ -143,7 +166,9 @@ message DeleteResponse {
 
 service Astore {
   rpc Store(StoreRequest) returns (StoreResponse) {}
+  rpc StoreComposite(StoreCompositeRequest) returns (StoreCompositeResponse) {}
   rpc Commit(CommitRequest) returns (CommitResponse) {}
+  rpc CommitComposite(CommitCompositeRequest) returns (CommitCompositeResponse) {}
   rpc Retrieve(RetrieveRequest) returns (RetrieveResponse) {}
   rpc List(ListRequest) returns (ListResponse) {}
   rpc Tag(TagRequest) returns (TagResponse) {}

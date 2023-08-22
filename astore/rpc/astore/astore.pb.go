@@ -1,0 +1,1 @@
+../../../bazel-bin/astore/rpc/astore/go_default_library_/github.com/enfabrica/enkit/astore/rpc/astore/astore.pb.go

@@ -77,13 +77,21 @@ func (s *Server) Store(ctx context.Context, req *astore.StoreRequest) (*astore.S
 	if err != nil {
 		return nil, fmt.Errorf("problems with secure prng - %w", err)
 	}
-
+	
 	url, err := storage.SignedURL(s.options.bucket, objectPath(sid), s.options.ForSigning("PUT"))
 	if err != nil {
 		return nil, fmt.Errorf("could not sign the url - %w", err)
 	}
 
 	return &astore.StoreResponse{Sid: sid, Url: url}, nil
+}
+
+func (s *Server) StoreComposite(ctx context.Context, req *astore.StoreCompositeRequest) (*astore.StoreCompositeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "")
+}
+
+func (s *Server) CommitComposite(ctx context.Context, req *astore.CommitCompositeRequest) (*astore.CommitCompositeResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "")
 }
 
 func parentPath(p string) string {
@@ -152,6 +160,10 @@ func (s *Server) List(ctx context.Context, req *astore.ListRequest) (*astore.Lis
 		Artifact: arts,
 	}
 	return &response, nil
+}
+
+func compositeObjectPartPath(sid string, part int) string {
+	return path.Join("composites", sid, fmt.Sprintf("%d", part))
 }
 
 func objectPath(sid string) string {

@@ -44,6 +44,9 @@ func (f *Flags) Register(set kflags.FlagSet, prefix string) *Flags {
 
 func WithFlags(f *Flags) Modifier {
 	return func(s *Server) error {
+		if err := WithLogger(logger.Go)(s); err != nil {
+			return err
+		}
 		if err := WithTimeLimit(f.TimeLimit)(s); err != nil {
 			return err
 		}
