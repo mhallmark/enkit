@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["main.go"],
+    importpath = "github.com/enfabrica/enkit/storage/client",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//lib/config/defcon:go_default_library",
+        "//lib/config/identity:go_default_library",
+        "//lib/khttp/kcookie:go_default_library",
+        "@com_github_bazelbuild_remote_apis//build/bazel/remote/execution/v2:execution",
+        "@com_github_pkg_errors//:go_default_library",
+        "@org_golang_google_grpc//:go_default_library",
+        "@org_golang_google_grpc//credentials:go_default_library",
+        "@org_golang_google_grpc//metadata:go_default_library",
+        "@org_golang_google_protobuf//encoding/prototext:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "client",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
